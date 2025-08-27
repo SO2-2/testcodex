@@ -1,20 +1,25 @@
 # Package Manager GUI
 
-Simple FLTK-based C++ application that exposes a minimal interface for installing software using package managers such as Winget, Chocolatey, and npm.
+Simple Qt-based Python application that exposes a minimal interface for installing software using package managers such as Winget, Chocolatey, and npm.
 
-## Building
+## Requirements
 
-This project requires FLTK development libraries (e.g. `libfltk1.3-dev`).
+Python 3 and the `PyQt5` package.
+
+Install the dependency using pip:
 
 ```bash
-mkdir build
-cd build
-cmake ..
-make
+pip install PyQt5
 ```
 
 ## Usage
 
-Run the compiled `package-manager-gui` binary. Enter a package name, choose the package manager, and press **Install**. Command output will be displayed in the text area.
+Run the application directly with Python:
+
+```bash
+python src/main.py
+```
+
+Enter a package name, choose the package manager, and press **Install**. Command output will be displayed in the text area.
 
 Because Winget and Chocolatey are Windows-specific, the corresponding commands will only work on Windows systems with those tools installed.
