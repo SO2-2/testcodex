@@ -1,10 +1,10 @@
 # Package Manager GUI
 
-Simple Qt-based C++ application that exposes a minimal interface for installing software using package managers such as Winget, Chocolatey, and npm.
+Simple FLTK-based C++ application that exposes a minimal interface for installing software using package managers such as Winget, Chocolatey, and npm.
 
 ## Building
 
-This project requires Qt 5 development libraries.
+This project requires FLTK development libraries (e.g. `libfltk1.3-dev`).
 
 ```bash
 mkdir build

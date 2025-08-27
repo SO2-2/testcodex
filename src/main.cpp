@@ -1,66 +1,77 @@
-#include <QApplication>
-#include <QWidget>
-#include <QPushButton>
-#include <QLineEdit>
-#include <QComboBox>
-#include <QVBoxLayout>
-#include <QTextEdit>
-#include <QProcess>
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Input.H>
+#include <FL/Fl_Choice.H>
+#include <FL/Fl_Text_Display.H>
+#include <FL/Fl_Text_Buffer.H>
 
-class MainWindow : public QWidget {
+#include <cstdio>
+#include <string>
+
+class MainWindow : public Fl_Window {
 public:
-    MainWindow() {
-        auto *layout = new QVBoxLayout(this);
-        combo = new QComboBox(this);
-        combo->addItem("winget");
-        combo->addItem("choco");
-        combo->addItem("npm");
-        layout->addWidget(combo);
+    MainWindow()
+        : Fl_Window(400, 300, "Package Manager GUI") {
+        begin();
 
-        input = new QLineEdit(this);
-        input->setPlaceholderText("Package name");
-        layout->addWidget(input);
+        choice = new Fl_Choice(100, 20, 200, 25, "Manager:");
+        choice->add("winget");
+        choice->add("choco");
+        choice->add("npm");
+        choice->value(0);
 
-        output = new QTextEdit(this);
-        output->setReadOnly(true);
-        layout->addWidget(output);
+        input = new Fl_Input(100, 60, 200, 25, "Package:");
 
-        auto *button = new QPushButton("Install", this);
-        layout->addWidget(button);
+        output_buffer = new Fl_Text_Buffer();
+        output = new Fl_Text_Display(20, 100, 360, 140);
+        output->buffer(output_buffer);
 
-        QObject::connect(button, &QPushButton::clicked, [this]() { runCommand(); });
+        auto *button = new Fl_Button(150, 250, 100, 30, "Install");
+        button->callback(run_cb, this);
+
+        end();
     }
 
 private:
-    void runCommand() {
-        QString pkg = input->text();
-        if (pkg.isEmpty()) return;
-
-        QString manager = combo->currentText();
-        QStringList args;
-        if (manager == "winget") {
-            args << "install" << pkg;
-        } else if (manager == "choco") {
-            args << "install" << pkg << "-y";
-        } else if (manager == "npm") {
-            args << "install" << "-g" << pkg;
-        }
-
-        QProcess proc;
-        proc.start(manager, args);
-        proc.waitForFinished();
-        output->append(proc.readAllStandardOutput());
-        output->append(proc.readAllStandardError());
+    static void run_cb(Fl_Widget *, void *userdata) {
+        static_cast<MainWindow *>(userdata)->runCommand();
     }
 
-    QComboBox *combo;
-    QLineEdit *input;
-    QTextEdit *output;
+    void runCommand() {
+        const char *pkg = input->value();
+        if (!pkg || pkg[0] == '\0') return;
+
+        const char *manager = choice->text(choice->value());
+        std::string command;
+        if (std::string(manager) == "winget") {
+            command = "winget install " + std::string(pkg);
+        } else if (std::string(manager) == "choco") {
+            command = "choco install " + std::string(pkg) + " -y";
+        } else if (std::string(manager) == "npm") {
+            command = "npm install -g " + std::string(pkg);
+        }
+
+        FILE *pipe = popen(command.c_str(), "r");
+        if (!pipe) return;
+        char buffer[128];
+        std::string result;
+        while (fgets(buffer, sizeof(buffer), pipe)) {
+            result += buffer;
+        }
+        pclose(pipe);
+        output_buffer->append(result.c_str());
+    }
+
+    Fl_Choice *choice;
+    Fl_Input *input;
+    Fl_Text_Display *output;
+    Fl_Text_Buffer *output_buffer;
 };
 
 int main(int argc, char **argv) {
-    QApplication app(argc, argv);
-    MainWindow w;
-    w.show();
-    return app.exec();
+    MainWindow win;
+    win.show(argc, argv);
+    return Fl::run();
 }
+
