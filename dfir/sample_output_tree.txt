@@ -1,0 +1,60 @@
+DFIR_HOST_20260101_120000/
+├── commands.log
+├── execution.log
+├── summary.json
+├── filesystem/
+│   ├── lnk_files.txt
+│   ├── prefetch.txt
+│   ├── recent_files.txt
+│   ├── recycle_bin.txt
+│   └── temp_files.txt
+├── integrity/
+│   ├── script_hash.txt
+│   └── sha256_manifest.csv
+├── logs/
+│   ├── Application.evtx
+│   ├── Application_recent.txt
+│   ├── Security.evtx
+│   ├── Security_recent.txt
+│   ├── System.evtx
+│   ├── System_recent.txt
+│   ├── WindowsPowerShell.evtx
+│   └── WindowsPowerShell_recent.txt
+├── memory/
+│   ├── loaded_modules.txt
+│   ├── lsass.dmp
+│   └── memory_dump_status.txt
+├── network/
+│   ├── arp_a.txt
+│   ├── dns_cache.txt
+│   ├── ipconfig_all.txt
+│   ├── netstat_ano.txt
+│   └── route_print.txt
+├── persistence/
+│   ├── autoruns.csv
+│   ├── run_hkcu.txt
+│   ├── run_hklm.txt
+│   ├── scheduled_tasks.txt
+│   ├── services.txt
+│   └── wmi_subscriptions.txt
+├── security/
+│   ├── av_products.txt
+│   ├── defender_status.txt
+│   └── firewall_rules.txt
+├── system/
+│   ├── bios.txt
+│   ├── computer_info.txt
+│   ├── environment.txt
+│   ├── process_tree.txt
+│   ├── processes.csv
+│   ├── processes_raw.csv
+│   ├── sigcheck_processes.txt
+│   └── systeminfo.txt
+├── timeline/
+│   └── filesystem_timeline.csv
+└── users/
+    ├── local_groups.txt
+    ├── local_users.txt
+    ├── loggedon_users.txt
+    ├── sessions.txt
+    └── whoami_all.txt
